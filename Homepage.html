@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Custom Homepage</title>
+  <script>
+    // function to generate random RGB values
+    function getRandomRGB() {
+      var r = Math.floor(Math.random() * 256);
+      var g = Math.floor(Math.random() * 256);
+      var b = Math.floor(Math.random() * 256);
+      return 'rgb(' + r + ', ' + g + ', ' + b + ')';
+    }
+    // function to set the background color and text color of the table rows
+    function setTableRowColors() {
+      var rows = document.getElementsByTagName('tr');
+      for (var i = 0; i < rows.length; i++) {
+        var bgColor = getRandomRGB();
+        var textColor = getTextColor(bgColor); // call the getTextColor function to get the complementary color
+        rows[i].style.backgroundColor = bgColor;
+        rows[i].style.color = textColor;
+        rows[i].getElementsByTagName('a')[0].style.color = textColor; // set link color to inverse color
+      }
+      document.body.style.backgroundColor = getRandomRGB(); // change the background color of the body
+    }
+    // function to get the complementary color of a given RGB color
+    function getTextColor(rgb) {
+      var color = rgb.substring(4, rgb.length - 1)
+                 .replace(/ /g, '')
+                 .split(',');
+      var r = parseInt(color[0]);
+      var g = parseInt(color[1]);
+      var b = parseInt(color[2]);
+      
+      // calculate the YIQ value to determine the brightness of the color
+      var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+      
+      if (r === g && g === b) {
+        // if the color is a shade of gray
+        if (r < 128) {
+          return 'white'; // use white text for dark gray
+        } else if (r > 128) {
+          return 'black'; // use black text for light gray
+        } else {
+          // for middle gray, randomly choose black or white text
+          return (Math.random() < 0.5) ? 'black' : 'white';
+        }
+      } else {
+        // for non-gray colors, return the inverted color
+        var invertedR = 255 - r;
+        var invertedG = 255 - g;
+        var invertedB = 255 - b;
+        var invertedColor = 'rgb(' + invertedR + ', ' + invertedG + ', ' + invertedB + ')';
+        return invertedColor;
+      }
+    }
+  </script>
+  <style>
+    table {
+      margin: 0 auto;
+    }
+    a {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body onload="setTableRowColors()">
+  <table>
+    <tr>
+      <td><a href="https://www.neopets.com/">Neopets</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://www.coolmathgames.com/">Cool Math Games</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://www.ixl.com/">IXL</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://mail.google.com/">Gmail</a></td>
+    </tr>
+  </table>
+</body>
+</html>
