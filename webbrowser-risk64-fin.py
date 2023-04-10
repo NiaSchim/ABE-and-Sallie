@@ -393,15 +393,25 @@ class CustomWebBrowser(QMainWindow):
         self.web_view.setUrl(QUrl.fromLocalFile(os.path.abspath(homepage_path)))
 
     def send_message_to_ai(self):
-        user_message = self.user_input_box.text()
-        if user_message:
-            with open("chat-history.txt", "a") as chat_history:
-                chat_history.write(f"User: {user_message}\n")
-            self.user_input_box.clear()
-            self.ai_message_box.setPlainText("AI: Placeholder response")
+        message = self.user_input_box.text()
+        self.update_chat_history("User", message)
+        self.user_input_box.clear()
+        self.send_to_brain_simulator("User", message)
 
     def release_ai(self):
-        pass
+        ai_message = "AI-generated message"  # Replace with the actual AI message
+        self.update_chat_history("AI", ai_message)
+        self.send_to_brain_simulator("AI", ai_message)
+
+    def send_to_brain_simulator(self, sender, message):
+        communication_file = "communication.txt"
+
+        with open(communication_file, "a") as f:
+            f.write(f"{sender}: {message}\n")
+
+        # Delete the file if it gets too large
+        if os.path.getsize(communication_file) > 50000:  # 50KB limit
+            os.remove(communication_file)
 
     def open_chat_history(self):
         chat_history_file = "chat-history.txt"
